@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mentor-Mentee Meeting — March 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F5F3EF;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --text2: #666;
+    --text3: #999;
+    --border: #E5E2DB;
+    --accent: #2D5BE3;
+    --accent-bg: #EEF2FD;
+    --success: #1B7B4E;
+    --success-bg: #E8F5EE;
+    --warn: #B05B00;
+    --warn-bg: #FDF2E4;
+    --danger: #C0392B;
+    --danger-bg: #FDECEA;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
+  }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 3rem;
+  }
+
+  .hero {
+    background: #1A1A2E;
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+  }
+  .hero-label {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.75);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .hero p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .container {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 12px;
+    padding-left: 2px;
+  }
+
+  .slot-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .slot-card.available:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 8px 24px rgba(0,0,0,0.06);
+  }
+  .slot-card.full-card {
+    opacity: 0.65;
+  }
+
+  .slot-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .slot-left { flex: 1; }
+  .slot-date {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 3px;
+  }
+  .slot-time {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+  .slot-venue {
+    font-size: 12px;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .slot-venue svg { flex-shrink: 0; }
+
+  .slot-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .badge-open { background: var(--success-bg); color: var(--success); }
+  .badge-warn { background: var(--warn-bg); color: var(--warn); }
+  .badge-full { background: var(--danger-bg); color: var(--danger); }
+
+  .progress-wrap {
+    background: var(--bg);
+    border-radius: 4px;
+    height: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .bar-green { background: #1B7B4E; }
+  .bar-amber { background: #E07B00; }
+  .bar-red { background: #C0392B; }
+
+  .slot-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .count-text {
+    font-size: 12px;
+    color: var(--text3);
+  }
+  .count-text strong { color: var(--text2); }
+
+  .btn-book {
+    background: #1A1A2E;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.2px;
+  }
+  .btn-book:hover:not(:disabled) { background: #2D3060; }
+  .btn-book:active:not(:disabled) { transform: scale(0.97); }
+  .btn-book:disabled {
+    background: var(--border);
+    color: var(--text3);
+    cursor: not-allowed;
+  }
+
+  .names-row {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .names-label {
+    font-size: 11px;
+    color: var(--text3);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .names-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .name-chip {
+    font-size: 11px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  /* Modal */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,20,0.5);
+    backdrop-filter: blur(3px);
+    z-index: 100;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .overlay.active { display: flex; }
+  @media (min-width: 500px) {
+    .overlay { align-items: center; }
+  }
+
+  .modal {
+    background: var(--card);
+    border-radius: 20px 20px 20px 20px;
+    width: 100%;
+    max-width: 420px;
+    padding: 1.75rem 1.5rem 1.5rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-slot-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .modal h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .modal-slot-info {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 1.4rem;
+    line-height: 1.5;
+  }
+
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    margin-bottom: 5px;
+    letter-spacing: 0.3px;
+  }
+  .field input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus { border-color: var(--accent); background: #fff; }
+
+  .modal-btns {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .btn-cancel-modal {
+    flex: 1;
+    padding: 11px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text2);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s;
+  }
+  .btn-cancel-modal:hover { background: var(--bg); }
+  .btn-confirm-modal {
+    flex: 2;
+    padding: 11px;
+    border: none;
+    border-radius: 10px;
+    background: #1A1A2E;
+    color: #fff;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-confirm-modal:hover { background: #2D3060; }
+  .btn-confirm-modal:active { transform: scale(0.98); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: #1A1A2E;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 300;
+    white-space: nowrap;
+    max-width: 90vw;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 1.5rem;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">March 2026</div>
+  <h1>Mentor-Mentee<br>Meeting</h1>
+  <p>Pick a slot that works for you and register below.</p>
+</div>
+
+<div class="container">
+  <div class="section-label">Available time slots</div>
+  <div id="slots"></div>
+  <p class="footer-note">Please register only once across all slots.</p>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-slot-badge" id="modal-badge">Booking</div>
+    <h2>Register your slot</h2>
+    <p class="modal-slot-info" id="modal-info"></p>
+    <div class="field">
+      <label>Full Name</label>
+      <input type="text" id="inp-name" placeholder="e.g. Priya Sharma" autocomplete="name" />
+    </div>
+    <div class="field">
+      <label>Student ID / Roll Number</label>
+      <input type="text" id="inp-id" placeholder="e.g. 22CS045" autocomplete="off" />
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel-modal" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm-modal" onclick="confirmBooking()">Confirm Booking</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SLOTS = [
+  {
+    id: "slot_mon_1530",
+    day: "Monday",
+    date: "23 Mar 2026",
+    time: "3:30 pm – 4:30 pm",
+    venue: "Faculty Cabin, 6th Floor, AB-4"
+  },
+  {
+    id: "slot_tue_1130",
+    day: "Tuesday",
+    date: "24 Mar 2026",
+    time: "11:30 am – 12:30 pm",
+    venue: "Faculty Cabin, 6th Floor, AB-4"
+  },
+  {
+    id: "slot_tue_1500",
+    day: "Tuesday",
+    date: "24 Mar 2026",
+    time: "3:00 pm – 4:30 pm",
+    venue: "Faculty Cabin, 6th Floor, AB-4"
+  },
+  {
+    id: "slot_tue_1630",
+    day: "Tuesday",
+    date: "24 Mar 2026",
+    time: "4:30 pm – 4:45 pm",
+    venue: "Room No. 315, AB-4"
+  },
+  {
+    id: "slot_wed_1115",
+    day: "Wednesday",
+    date: "25 Mar 2026",
+    time: "11:15 am – 12:30 pm",
+    venue: "Faculty Cabin, 6th Floor, AB-4"
+  },
+  {
+    id: "slot_thu_0900",
+    day: "Thursday",
+    date: "26 Mar 2026",
+    time: "9:00 am – 11:00 am",
+    venue: "Faculty Cabin, 6th Floor, AB-4"
+  }
+];
+
+const MAX = Infinity;
+let state = {};
+let pendingId = null;
+
+const STORAGE_KEY = "mentor_meeting_mar26_v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = JSON.parse(raw);
+    else SLOTS.forEach(s => state[s.id] = []);
+  } catch {
+    SLOTS.forEach(s => state[s.id] = []);
+  }
+  for (const s of SLOTS) {
+    if (!Array.isArray(state[s.id])) state[s.id] = [];
+  }
+  render();
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+}
+
+function render() {
+  const container = document.getElementById("slots");
+  container.innerHTML = "";
+  for (const slot of SLOTS) {
+    const regs = state[slot.id] || [];
+    const count = regs.length;
+    const full = false;
+    const barClass = "bar-green";
+    const pct = 0;
+    const badgeText = count === 0 ? "Open" : `${count} registered`;
+    const badgeClass = "badge-open";
+
+    const card = document.createElement("div");
+    card.className = "slot-card " + (full ? "full-card" : "available");
+    card.innerHTML = `
+      <div class="slot-top">
+        <div class="slot-left">
+          <div class="slot-date">${slot.day} · ${slot.date}</div>
+          <div class="slot-time">${slot.time}</div>
+          <div class="slot-venue">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 1.5C5.51 1.5 3.5 3.51 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.49-2.01-4.5-4.5-4.5z"/>
+              <circle cx="8" cy="6" r="1.5"/>
+            </svg>
+            ${slot.venue}
+          </div>
+        </div>
+        <span class="slot-badge ${badgeClass}">${badgeText}</span>
+      </div>
+      <div class="slot-footer">
+        <span class="count-text"><strong>${count}</strong> student${count !== 1 ? "s" : ""} registered</span>
+        <button class="btn-book" onclick="openModal('${slot.id}')">Book This Slot</button>
+      </div>
+      ${regs.length > 0 ? `
+        <div class="names-row">
+          <div class="names-label">Registered</div>
+          <div class="names-list">${regs.map(r => `<span class="name-chip">${escHtml(r.name)}</span>`).join("")}</div>
+        </div>` : ""}
+    `;
+    container.appendChild(card);
+  }
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function openModal(id) {
+  const slot = SLOTS.find(s => s.id === id);
+  if (!slot) return;
+  pendingId = id;
+  document.getElementById("modal-badge").textContent = slot.day + " · " + slot.date;
+  document.getElementById("modal-info").textContent = slot.time + " · " + slot.venue;
+  document.getElementById("inp-name").value = "";
+  document.getElementById("inp-id").value = "";
+  document.getElementById("overlay").classList.add("active");
+  setTimeout(() => document.getElementById("inp-name").focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById("overlay").classList.remove("active");
+  pendingId = null;
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById("overlay")) closeModal();
+}
+
+function confirmBooking() {
+  const name = document.getElementById("inp-name").value.trim();
+  const sid = document.getElementById("inp-id").value.trim();
+  if (!name) { toast("Please enter your full name."); document.getElementById("inp-name").focus(); return; }
+  if (!sid) { toast("Please enter your Student ID."); document.getElementById("inp-id").focus(); return; }
+
+  const regs = state[pendingId] || [];
+  if (regs.length >= MAX) { toast("This slot just filled up!"); closeModal(); render(); return; }
+
+  const dupName = regs.some(r => r.name.toLowerCase() === name.toLowerCase());
+  const dupId = regs.some(r => r.id.toLowerCase() === sid.toLowerCase());
+  if (dupName || dupId) { toast("You're already registered for this slot."); return; }
+
+  // Check if registered in any slot
+  for (const s of SLOTS) {
+    const found = (state[s.id] || []).find(r => r.id.toLowerCase() === sid.toLowerCase());
+    if (found) {
+      const other = SLOTS.find(x => x.id === s.id);
+      toast("You already have a slot: " + other.day + " " + other.time);
+      return;
+    }
+  }
+
+  state[pendingId] = [...regs, { name, id: sid }];
+  saveState();
+  render();
+  closeModal();
+  toast("Booking confirmed! See you then 🎉");
+}
+
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove("show"), 3500);
+}
+
+document.getElementById("inp-id").addEventListener("keydown", e => { if (e.key === "Enter") confirmBooking(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+loadState();
+</script>
+</body>
+</html>
